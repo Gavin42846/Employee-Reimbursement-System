@@ -5,6 +5,8 @@ import { Login } from './Components/LoginRegister/Login'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Register } from './Components/LoginRegister/Register'
 import { UserTable } from './Components/User/UserTable'
+import { ViewMyReimb } from './Components/Reimbursements/ViewMyReimb'
+import { ViewAllReimb } from './Components/Reimbursements/ViewAllReimb'
 //^THIS IS A REQUIRED MANUAL IMPORT FOR BOOTSTRAP TO WORK!!!
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
           <Route path="" element={<Login/>}/>
           <Route path="register" element={<Register/>}/>
           <Route path="users" element={<UserTable/>}/>
+          <Route path="/reimbursements/my-reimbursements" element={<ViewMyReimb/>}/>
+          <Route path="reimbursements/view" element={<ViewAllReimb/>}/>
         </Routes>
       </BrowserRouter>
 

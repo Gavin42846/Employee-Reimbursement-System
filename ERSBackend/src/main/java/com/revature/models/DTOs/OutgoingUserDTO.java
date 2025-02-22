@@ -3,18 +3,19 @@ package com.revature.models.DTOs;
 
 
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.revature.models.User;
 
 
 
-
+@JsonPropertyOrder({"userId", "firstname", "lastname", "username", "role"})
 public class OutgoingUserDTO {
 
 
     private int userId;
-    private String username;
     private String firstname;
     private String lastname;
+    private String username;
     private String role;
 
     //bp----------------------------
@@ -23,19 +24,19 @@ public class OutgoingUserDTO {
     public OutgoingUserDTO() {
     }
 
-    public OutgoingUserDTO(int userId, String username, String firstname, String lastname, String role) {
+    public OutgoingUserDTO(int userId, String firstname, String lastname,  String username, String role) {
         this.userId = userId;
-        this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.username = username;
         this.role = role;
     }
 
     public OutgoingUserDTO(User u) {
         this.userId = u.getUserId();
-        this.username = u.getUsername();
         this.firstname = u.getFirstname();
         this.lastname = u.getLastname();
+        this.username = u.getUsername();
         this.role = u.getRole();
     }
 

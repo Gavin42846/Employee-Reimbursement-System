@@ -38,12 +38,12 @@ public class AuthController {
         OutgoingUserDTO loggedInUser = authService.login(loginDTO);
 
         session.setAttribute("userId", loggedInUser.getUserId());
-        session.setAttribute("firstname", loggedInUser.getUserId());
-        session.setAttribute("lastname", loggedInUser.getUserId());
-        session.setAttribute("username", loggedInUser.getUserId());
-        session.setAttribute("role", loggedInUser.getUserId());
+        session.setAttribute("firstname", loggedInUser.getFirstname());
+        session.setAttribute("lastname", loggedInUser.getLastname());
+        session.setAttribute("username", loggedInUser.getUsername());
+        session.setAttribute("role", loggedInUser.getRole());
 
-        System.out.println("User " + session.getAttribute("username") + " has logged in!");
+        System.out.println("User " + session.getAttribute("username") + " has logged in!" + session.getAttribute("role"));
 
         return ResponseEntity.ok(loggedInUser);
     }

@@ -1,14 +1,12 @@
 package com.revature.controllers;
 
 
+import com.revature.aspects.AdminOnly;
 import com.revature.models.DTOs.OutgoingUserDTO;
 import com.revature.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,8 +24,19 @@ public class UserController {
 
     //return all users to the client
     @GetMapping
-    //ADD ADMIN ONLY LATER
+    @AdminOnly
     public ResponseEntity<List<OutgoingUserDTO>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers()); // returns all users
+    }
+
+    @DeleteMapping("/{userId}")
+    @AdminOnly
+    public  ResponseEntity<String> deleteUser(@PathVariable int userId) {
+        boolean isDeleted = userService.deleteUser(userId);
+        if(isDeleted) {
+            return ResponseEntity.ok("User and their reimbursements deleted successfully.");
+        } else {
+            return ResponseEntity.status(404).body("User not found.");
+        }
     }
 }

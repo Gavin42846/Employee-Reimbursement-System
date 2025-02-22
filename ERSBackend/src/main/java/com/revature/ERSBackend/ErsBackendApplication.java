@@ -16,5 +16,4 @@ public class ErsBackendApplication {
 		SpringApplication.run(ErsBackendApplication.class, args);
 		System.out.println("ERS App is Running.");
 	}
-
 }
