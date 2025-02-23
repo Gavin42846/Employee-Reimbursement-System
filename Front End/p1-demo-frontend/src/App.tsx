@@ -7,6 +7,7 @@ import { Register } from './Components/LoginRegister/Register'
 import { UserTable } from './Components/User/UserTable'
 import { ViewMyReimb } from './Components/Reimbursements/ViewMyReimb'
 import { ViewAllReimb } from './Components/Reimbursements/ViewAllReimb'
+import { NewReimb } from './Components/Reimbursements/NewReimb'
 //^THIS IS A REQUIRED MANUAL IMPORT FOR BOOTSTRAP TO WORK!!!
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="users" element={<UserTable/>}/>
           <Route path="/reimbursements/my-reimbursements" element={<ViewMyReimb/>}/>
           <Route path="reimbursements/view" element={<ViewAllReimb/>}/>
+          <Route path="/create-reimbursement" element={<NewReimb/>}/>
         </Routes>
       </BrowserRouter>
 

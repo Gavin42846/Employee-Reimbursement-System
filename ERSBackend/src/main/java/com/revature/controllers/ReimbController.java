@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reimbursements")
-@CrossOrigin(value = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class ReimbController {
 
     private final ReimbService reimbService;
@@ -35,19 +35,6 @@ public class ReimbController {
         return ResponseEntity.accepted().body(reimbService.insertReimb(reimbDTO));
     }
 
-    //update reimb status with patch request
-    @PatchMapping("/{id}/status")
-    @AdminOnly
-    public ResponseEntity<String> updateStatus(@PathVariable int id, @RequestBody String status) {
-        boolean updated = reimbService.updateReimbursementStatus(id, status);
-
-        if(updated) {
-            return ResponseEntity.ok("Reimbursement state updated successfully.");
-        } else {
-            return ResponseEntity.status(404).body("Reimbursement not found.");
-        }
-    }
-
     @GetMapping("/my-reimbursements")
     public ResponseEntity<?> getMyReimbursements(HttpSession session) {
         try {
@@ -57,4 +44,29 @@ public class ReimbController {
             return ResponseEntity.status(401).body("User is not logged in.");
         }
     }
+
+    @PatchMapping("/{reimbId}/status/{newStatus}")
+    public ResponseEntity<?> updateReimbursementStatus(@PathVariable int reimbId, @PathVariable String newStatus) {
+        boolean updated = reimbService.updateReimbursementStatus(reimbId, newStatus);
+
+        if (updated) {
+            return ResponseEntity.ok("Reimbursement " + reimbId + " updated to " + newStatus);
+        } else {
+            return ResponseEntity.status(404).body("Reimbursement not found");
+        }
+    }
+
+    @DeleteMapping("/{reimbId}")
+    public ResponseEntity<?> deleteReimbursement(@PathVariable int reimbId) {
+        boolean deleted = reimbService.deleteReimbursement(reimbId);
+
+        if (deleted) {
+            return ResponseEntity.ok("Reimbursement " + reimbId + " deleted successfully.");
+        } else {
+            return ResponseEntity.status(404).body("Reimbursement not found.");
+        }
+    }
+
+
+
 }

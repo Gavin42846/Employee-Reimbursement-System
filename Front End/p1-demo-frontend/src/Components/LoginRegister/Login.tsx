@@ -56,18 +56,19 @@ export const Login:React.FC = () => {
             //if catch doesnt run login was successful, save the data to our global store then switch components
             store.loggedInUser = response.data // this is our logged in user data from the backend
             
-            //greet user with stored data
-            alert(store.loggedInUser.username + " has logged in! Welcome")
+            
 
             //users will get sent to users comp if they are an "admin" or the games comp if they are a "user"
 
             if(store.loggedInUser.role === "admin") {
+                //greet user with stored data
+                alert(store.loggedInUser.username + " has logged in! Welcome")
                 navigate("/users")
             } else {
+                //greet user with stored data
+                alert(store.loggedInUser.username + " has logged in! Welcome")
                 navigate("/reimbursements/my-reimbursements")
             }
-
-
         } catch{
             alert("Login unsuccessful")
         }

@@ -19,11 +19,14 @@ public interface ReimbursementDAO extends JpaRepository<Reimbursement, Integer> 
     public List<Reimbursement> findByUser_UserId(int userId);
 
     //deletes a user and their reimbursements
-    void deleteByUser_UserId(int userId); // Deletes all reimbursements by user ID
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Reimbursement r WHERE r.user.userId = :userId")
+    void deleteByUser_UserId(int userId);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Reimbursement r SET r.status = :status WHERE r.id = :id")
-    int updateReimbursementStatus(@Param("id") int id, @Param("status") String status);
+    @Query("UPDATE Reimbursement r SET r.status = :status WHERE r.reimbId = :id")
+    void updateReimbursementStatus(@Param("id") int id, @Param("status") String status);
 
 }

@@ -18,6 +18,29 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @GetMapping("/me")
+    public ResponseEntity<?> getLoggedInUser(HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("userId");
+        String username = (String) session.getAttribute("username");
+
+        if (userId == null) {
+            return ResponseEntity.status(401).body("User is not logged in");
+        }
+        return ResponseEntity.ok().body(
+                new LoggedInUserDTO(userId, username)
+        );
+    }
+    // DTO to send logged-in user details
+    private static class LoggedInUserDTO {
+        public Integer userId;
+        public String username;
+
+        public LoggedInUserDTO(Integer userId, String username) {
+            this.userId = userId;
+            this.username = username;
+        }
+    }
+
     @Autowired
     public AuthController(AuthService authService) { this.authService = authService; }
 

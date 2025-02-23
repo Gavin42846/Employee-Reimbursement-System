@@ -37,9 +37,6 @@ public class ReimbService {
     //insert new reimb into the DB / get user by ID and make a reimb object with it
     public Reimbursement insertReimb(IncomingReimbDTO reimbDTO){
 
-
-        //TODO: input validation
-
         Reimbursement newReimb = new Reimbursement(
                 0,
                 reimbDTO.getDescription(),
@@ -51,8 +48,6 @@ public class ReimbService {
         Optional<User> user = userDAO.findById(reimbDTO.getUserId());
 
         if(user.isEmpty()) {
-            //TODO: throw an exception
-
         } else {
             newReimb.setUser(user.get());
         }
@@ -60,16 +55,13 @@ public class ReimbService {
         return reimbursementDAO.save(newReimb);
     }
 
-    //update reimb status
     @Transactional
     public boolean updateReimbursementStatus(int id, String status){
-        Optional<Reimbursement> reimbursement = reimbursementDAO.findById(id);
-
-        if (reimbursement.isPresent()) {
-            reimbursementDAO.updateReimbursementStatus(id, status);
-            return true; //update successful
+        if (reimbursementDAO.existsById(id)) { //Check if reimbursement exists
+            reimbursementDAO.updateReimbursementStatus(id, status); //Custom DAO method
+            return true; // Update successful
         } else {
-            return false; //reimb not found
+            return false; // Reimbursement not found
         }
     }
 
@@ -82,4 +74,17 @@ public class ReimbService {
         }
         return reimbursementDAO.findByUser_UserId(userId);
     }
+
+    @Transactional
+    public boolean deleteReimbursement(int reimbId) {
+        if (reimbursementDAO.existsById(reimbId)) {
+            reimbursementDAO.deleteById(reimbId);
+            return true; // Successfully deleted
+        } else {
+            return false; // Not found
+        }
+    }
+
+
+
 }

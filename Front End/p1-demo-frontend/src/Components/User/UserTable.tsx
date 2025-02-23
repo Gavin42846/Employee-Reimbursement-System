@@ -22,28 +22,44 @@ export const UserTable:React.FC = () => {
             const response = await axios.get("http://localhost:8080/users", {
                 withCredentials: true
             })
-            console.log(response.data)
+            //console.log(response.data)
 
             //store the user data in our users state object
             setUsers(response.data)
-        } catch{
+        } catch(error){
+            console.error("Error fetching users:", error);
             alert("something went wrong trying to fetch users")
         }
-        
     }
 
-    //function that does a fake update or delete(wanna show how to extract data from a map)
-    const updateUser = (user:User) => {
-        alert("User " + user.userId + " has been fake updated or deleted")
-        //this is where you would do patch request
-        //cache the list of users and update that so we dont make repeat DB calls
-    }
+    //DELETE user function
+    const deleteUser = async (userId: number) => {
+        if (!window.confirm("Are you sure you want to delete this user? This will also remove all their reimbursements!")) {
+            return;
+        }
+
+        try {
+            await axios.delete(`http://localhost:8080/users/${userId}`, {
+                withCredentials: true
+            });
+
+            alert(`User ${userId} has been deleted.`);
+            
+            //Remove deleted user from UI without refreshing the page
+            setUsers(users.filter(user => user.userId !== userId));
+
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            alert("Failed to delete user.");
+        }
+    };
 
     return(
         
         <Container className="d-flex flex-column align-items-center mt-3">
             
             <div className="d-flex justify-content-end w-50">
+                <Button variant="dark" className="mb-2" onClick={()=>navigate("/")}>Login</Button>
                 <Button variant="dark" className="mb-2" onClick={()=>navigate("/reimbursements/view")}>Reimbursements</Button>
             </div>
             <h3>Users: </h3>
@@ -68,14 +84,12 @@ export const UserTable:React.FC = () => {
                             <td>{user.lastname}</td>
                             <td>{user.role}</td>
                             <td>
-                                <Button variant="outline-success" onClick={() => updateUser(user)}>Promote</Button>
-                                <Button variant="outline-danger" onClick={() => updateUser(user)}>Fire</Button> 
+                                {/* <Button variant="outline-success" >Promote</Button> */}
+                                
+                                <Button variant="outline-danger" onClick={() => deleteUser(user.userId)}>Fire</Button> 
                             </td>
                         </tr>
                     ))}
-                    {/*  why paraenthesis to open arrow function? because it implicitly returns instead of explicitly*/}
-                    
-                    
                 </tbody>
             </Table>
             

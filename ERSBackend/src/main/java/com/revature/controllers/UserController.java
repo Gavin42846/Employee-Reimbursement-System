@@ -30,11 +30,11 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    @AdminOnly
-    public  ResponseEntity<String> deleteUser(@PathVariable int userId) {
-        boolean isDeleted = userService.deleteUser(userId);
-        if(isDeleted) {
-            return ResponseEntity.ok("User and their reimbursements deleted successfully.");
+    public ResponseEntity<?> deleteUser(@PathVariable int userId) {
+        boolean deleted = userService.deleteUser(userId);
+
+        if (deleted) {
+            return ResponseEntity.ok("User " + userId + " and all their reimbursements deleted successfully.");
         } else {
             return ResponseEntity.status(404).body("User not found.");
         }

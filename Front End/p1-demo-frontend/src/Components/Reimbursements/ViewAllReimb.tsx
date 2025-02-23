@@ -7,12 +7,15 @@ import { Reimbursement } from "../../Interfaces/Reimbursement"
 import { useNavigate } from "react-router-dom"
 
 
+
 export const ViewAllReimb:React.FC = () => {
 
         const [users, setUsers] = useState<User[]>([]);
         const [reimbursements, setReimbursements] = useState<Reimbursement[]>([]);
         const [combinedData, setCombinedData] = useState<ReimbursementWithUser[]>([]);
+        const [filteredData, setFilteredData] = useState<ReimbursementWithUser[]>([]);
         const [loading, setLoading] = useState(true);
+        const [showPending, setShowPending] = useState(false); 
         const navigate = useNavigate()
     
         useEffect(() => {
@@ -42,6 +45,7 @@ export const ViewAllReimb:React.FC = () => {
 
                     const user = usersResponse.data.find((u: User) => Number(u.userId) === userId);
                     return {
+                        reimbId: reimb.reimbId,
                         userId: userId || "Unknown",
                         username: user ? user.username : "Unknown User",
                         description: reimb.description,
@@ -52,6 +56,7 @@ export const ViewAllReimb:React.FC = () => {
     
                 // Store the merged data
                 setCombinedData(mergedData);
+                setFilteredData(mergedData);
             } catch (error) {
                 console.error("Error fetching data:", error);
                 alert("Something went wrong trying to fetch data");
@@ -59,11 +64,45 @@ export const ViewAllReimb:React.FC = () => {
                 setLoading(false);
             }
         };
+
+        //Function to handle approve/deny actions
+    const updateStatus = async (reimbId: number, newStatus: string) => {
+        try {
+            const response = await axios.patch(`http://localhost:8080/reimbursements/${reimbId}/status/${newStatus}`, null, {
+                withCredentials: true
+            });
+
+            console.log(`Reimbursement ${reimbId} updated to ${newStatus}`, response.data);
+            alert(`Reimbursement ${reimbId} marked as ${newStatus}`);
+
+            // Refresh the data after updating the status
+            fetchUsersAndReimbursements();
+        } catch (error) {
+            console.error("Error updating reimbursement status:", error);
+            alert("Failed to update reimbursement status.");
+        }
+    };
+
+    const filterPendingReimbursements = () => {
+        if (showPending) {
+            // Show all reimbursements when toggled back
+            setFilteredData(combinedData);
+            setShowPending(false);
+        } else {
+            // Filter only "PENDING" reimbursements
+            setFilteredData(combinedData.filter(reimb => reimb.status.toUpperCase() === "PENDING"));
+            setShowPending(true);
+        }
+    };
+    
     
 
 
     return(
         <Container className="d-flex flex-column align-items-center mt-3">
+                <Button variant="dark" className="mb-2" onClick={filterPendingReimbursements}>
+                    {showPending ? "Show All Reimbursements" : "Show Pending Only"}
+                </Button>
                     <div className="d-flex justify-content-end w-50">
                         <Button variant="dark" className="mb-2" onClick={()=>navigate("/users")}>Users</Button>
                     </div>
@@ -82,16 +121,16 @@ export const ViewAllReimb:React.FC = () => {
                             </tr>
                         </thead>
                         <tbody className="table-secondary">
-                        {combinedData.map((item) => (
-                                <tr key={`${item.userId}-${item.description}`}>
+                        {filteredData.map((item) => (
+                                <tr key={item.reimbId}>
                                     <td>{item.userId}</td>
                                     <td>{item.username}</td>
                                     <td>{item.description}</td>
-                                    <td>{item.amount}</td>
+                                    <td>${item.amount}</td>
                                     <td>{item.status}</td>
                                     <td>
-                                        <Button variant="outline-success" >Approve</Button>
-                                        <Button variant="outline-danger" >Deny</Button> 
+                                        <Button variant="outline-success" onClick={() => updateStatus(item.reimbId, "approved")}>Approve</Button>
+                                        <Button variant="outline-danger" onClick={() => updateStatus(item.reimbId, "declined")}>Deny</Button> 
                                     </td>
                                 </tr>
                         ))}

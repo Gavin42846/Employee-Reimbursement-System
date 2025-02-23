@@ -22,9 +22,6 @@ public class AuthService {
     //this will take a user object and send it to the DAO
     //it will also return the inserted user to the controller
     public OutgoingUserDTO registerUser(User user){
-
-        //TODO: input validation
-
         //save is used to insert data to DB
         User returnedUser = userDAO.save(user);
 
