@@ -28,7 +28,7 @@ export const UserTable:React.FC = () => {
             setUsers(response.data)
         } catch(error){
             console.error("Error fetching users:", error);
-            alert("something went wrong trying to fetch users")
+            navigate("/");
         }
     }
 
@@ -54,12 +54,26 @@ export const UserTable:React.FC = () => {
         }
     };
 
+    const logout = async () => {
+        try {
+            await axios.post("http://localhost:8080/auth/logout", null, {
+                withCredentials: true,
+            });
+    
+            alert("You have been logged out.");
+            navigate("/"); //Redirect to login/home page
+        } catch (error) {
+            console.error("Error logging out:", error);
+            alert("Failed to log out.");
+        }
+    };
+    
+
     return(
         
         <Container className="d-flex flex-column align-items-center mt-3">
-            
             <div className="d-flex justify-content-end w-50">
-                <Button variant="dark" className="mb-2" onClick={()=>navigate("/")}>Login</Button>
+                <Button variant="dark" className="mb-2" onClick={logout}>Logout</Button>
                 <Button variant="dark" className="mb-2" onClick={()=>navigate("/reimbursements/view")}>Reimbursements</Button>
             </div>
             <h3>Users: </h3>

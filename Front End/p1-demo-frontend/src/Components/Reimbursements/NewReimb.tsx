@@ -14,7 +14,7 @@ export const NewReimb:React.FC = () => {
     const [reimbData, setReimbData] = useState({
         amount: "",
         description: "",
-        userId: null // ✅ Will be populated with logged-in userId
+        userId: null // Will be populated with logged-in userId
     });
 
     
@@ -39,12 +39,22 @@ export const NewReimb:React.FC = () => {
         setReimbData((prevState) => ({ ...prevState, [name]: value }));
     };
 
+
     // Handle form submission
     const submitReimbursement = async () => {
         if (!reimbData.userId) {
             alert("User is not logged in. Please log in before submitting a request.");
             return;
         }
+        
+        const amountValue = Number(reimbData.amount);
+
+
+        if(isNaN(amountValue) || amountValue <= 0) {
+            alert("Reimbursement amount must be greater than 0.")
+            return;
+        }
+
 
         try {
             const response = await axios.post("http://localhost:8080/reimbursements", {
@@ -75,11 +85,12 @@ export const NewReimb:React.FC = () => {
             <h1>Reimbursement Application</h1>
             <div>
                 <Form.Control
-                    type="text"
+                    type="number"
                     placeholder="Enter amount for your request here"
                     name="amount"
                     value={reimbData.amount}
                     onChange={handleInputChange}
+                    min="1"
                 />
             </div>
             <div>

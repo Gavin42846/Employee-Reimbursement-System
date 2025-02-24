@@ -47,7 +47,7 @@ export const ViewMyReimb: React.FC = () => {
             setFilteredReimbursements(response.data);
         } catch (error) {
             console.error("Error fetching reimbursements:", error);
-            alert("Failed to fetch reimbursements.");
+            navigate("/");
         } finally {
             setLoading(false);
         }
@@ -87,6 +87,19 @@ export const ViewMyReimb: React.FC = () => {
         }
     };
     
+    const logout = async () => {
+        try {
+            await axios.post("http://localhost:8080/auth/logout", null, {
+                withCredentials: true,
+            });
+    
+            alert("You have been logged out.");
+            navigate("/"); //Redirect to login/home page
+        } catch (error) {
+            console.error("Error logging out:", error);
+            alert("Failed to log out.");
+        }
+    };
 
     
 
@@ -95,7 +108,7 @@ export const ViewMyReimb: React.FC = () => {
     return (
         <Container className="d-flex flex-column align-items-center mt-3">
             <div className="d-flex justify-content-end w-50">
-                <Button variant="dark" className="mb-2" onClick={()=>navigate("/")}>Login</Button>
+                <Button variant="dark" className="mb-2" onClick={logout}>Logout</Button>
                 <Button variant="dark" className="mb-2" onClick={filterPendingReimbursements}>
                     {showPending ? "Show All Reimbursements" : "Show Pending Only"}
                 </Button>

@@ -59,7 +59,7 @@ export const ViewAllReimb:React.FC = () => {
                 setFilteredData(mergedData);
             } catch (error) {
                 console.error("Error fetching data:", error);
-                alert("Something went wrong trying to fetch data");
+                navigate("/");
             } finally {
                 setLoading(false);
             }

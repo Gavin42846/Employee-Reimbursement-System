@@ -71,4 +71,10 @@ public class AuthController {
         return ResponseEntity.ok(loggedInUser);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session) {
+        session.invalidate(); // Destroy session
+        return ResponseEntity.ok("Logged out successfully.");
+    }
+
 }
