@@ -11,6 +11,13 @@ export const Register:React.FC = () => {
         const navigate = useNavigate()
   
         const register = async () => {
+
+            if (!regisCreds.username || !regisCreds.firstname || !regisCreds.lastname || !regisCreds.password) {
+                alert("All fields are required. Please fill in all fields.");
+                return;
+            }
+
+
             try {
                 //Send user-provided input instead of hardcoded values
                 const response = await axios.post("http://localhost:8080/auth/register", regisCreds);
@@ -90,10 +97,10 @@ export const Register:React.FC = () => {
                 />
             </div>
 
-              <div>
-                <Button onClick={register}>Create Account!</Button>
-              </div>
-          </div>
+                <Button onClick={register} disabled={!regisCreds.username || !regisCreds.firstname || !regisCreds.lastname || !regisCreds.password}>
+                    Create Account!
+                </Button>
+            </div>
       </Container>
   )
 
