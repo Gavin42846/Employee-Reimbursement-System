@@ -78,7 +78,7 @@ export const Login:React.FC = () => {
         /*Bootstrap gives us this Container element that does some default padding and centering*/
         <Container> 
 
-            <h1>Welcome</h1>
+            <h1>Employee Reimbursement System</h1>
                 <h3>Please Log In:</h3>
                 
                 <div>
